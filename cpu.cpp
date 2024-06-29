@@ -1,5 +1,12 @@
 #include "cpu.hpp"
 #include <iostream>
+#include <chrono>
+#include <random>
+
+uint8_t randomByteGenerator(){
+    std::default_random_engine randGen;
+    return std::uniform_int_distribution<uint8_t>(0,255)(randGen);
+}
 
 
 
@@ -15,15 +22,15 @@ void CPU::ExecuteInstruction(uint16_t instruction){
     
     switch(instruction & 0xF000){
         case 0x0000:{
-            switch(instruction & 0x000F){
+            switch(instruction & 0x00FF){
                 case 0xE0:{
                     std::cout<<"Clear display"<<std::endl;
-                    //display.clearScreenOfWindow();
                     memset(memory->display,0,sizeof(memory->display));
                     break;
                 }
                 case 0xEE:{
-                    PC = stack[SP--];
+                    --stackPointer;
+                    PC = stack[stackPointer];
                     std::cout<<"Return from subroutine"<<std::endl;
                     return;
                 }
@@ -37,8 +44,8 @@ void CPU::ExecuteInstruction(uint16_t instruction){
             return;
         }
         case 0x2000:{
-            stack[SP] = PC + 2;
-            SP++;
+            stack[stackPointer] = PC + 2;
+            stackPointer++;
             PC = (instruction & 0x0FFF);
             return;
         }
@@ -171,28 +178,13 @@ void CPU::ExecuteInstruction(uint16_t instruction){
             PC = valuennn + V[0];
             return;
         }
-        case 0xC000:
+        case 0xC000:{
+            uint8_t x = (instruction & 0x0F00)>>8;
+            uint8_t byte = instruction & 0x00FF;
+            V[x] = randomByteGenerator() & byte;
             break;
+        }
         case 0xD000:{
-            /*
-            uint8_t x = V[(instruction & 0x0F00) >> 8];
-            uint8_t y = V[(instruction & 0x00F0) >> 4];
-            uint8_t height = instruction & 0x000F;
-            uint8_t pixel;
-
-            V[0xF] = 0;
-            for (int yline = 0; yline < height; yline++) {
-                pixel = memory->ram[I + yline];
-                for (int xline = 0; xline < 8; xline++) {
-                    if ((pixel & (0x80 >> xline)) != 0) {
-                        if (memory->display[(x + xline + ((y + yline) * 64))] == 1) {
-                            V[0xF] = 1;
-                        }
-                        memory->display[x + xline + ((y + yline) * 64)] ^= 1;
-                    }
-                }
-            }
-            */
             uint16_t tempX = ((instruction & 0x0F00) >> 8);
             uint16_t tempY = ((instruction & 0x00F0) >> 4);
             uint8_t x = V[tempX] % screen_width;
@@ -224,11 +216,46 @@ void CPU::ExecuteInstruction(uint16_t instruction){
             break;
         }
         case 0xE000:
+
             break;
         case 0xF000:
+            switch(instruction & 0x00FF){
+                case 0x07:{
+                    uint8_t x = (instruction & 0x0F00)>>8;
+                    V[x] = delayTimer;
+                    break;
+                }
+                case 0x0A:{
+                    break;
+                }
+                case 0x15:{
+                    break;
+                }
+                case 0x18:{
+                    break;
+                }
+                case 0x1E:{
+                    break;
+                }
+                case 0x29:{
+                    break;
+                }
+                case 0x33:{
+                    break;
+                }
+                case 0x55:{
+                    break;
+                }
+                case 0x65:{
+                    break;
+                }
+
+                default:
+                    std::cout<<"Instruction not found"<<std::endl;
+            }
             break;
         default:
-        std::cout<<"No Functionality for OPCODE: " << std::hex <<instruction << std::endl;
+        std::cout<<"Instruction not found"<<std::endl;
     }
     PC += 2;
     

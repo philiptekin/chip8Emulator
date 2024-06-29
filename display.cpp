@@ -73,5 +73,4 @@ void Display::initializeDisplay(){
 void Display::renderScreen(){
         SDL_Delay(delayInMs);  
         drawSprite();
-        //SDL_RenderPresent(sdlRenderer);
 }
