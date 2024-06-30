@@ -12,7 +12,7 @@ class CPU{
         uint16_t I; // only 12 lowest most bits are used
         uint16_t stack[16];
         uint8_t stackPointer = 0;
-        uint8_t delayTimer = 0;
+        uint8_t delayTimer = 255;
         uint8_t soundTimer = 0;
         Display* display;
         Memory* memory;

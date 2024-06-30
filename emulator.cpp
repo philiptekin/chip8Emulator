@@ -19,7 +19,7 @@ void Emulator::startEmulator(){
         if(state==PAUSED){
             continue;
         }
-        runEmulatorForCycles(1);
+        runEmulatorForCycles(instructionsExecutedForEachFrame);
         display.renderScreen();
 
         
