@@ -13,7 +13,7 @@ class Emulator{
         Memory memory;
         Display display{&memory};
         CPU cpu{&display,&memory};
-        InputHandler inputHandler;
+        InputHandler inputHandler{&memory};
         emulator_state_t state = RUNNING;
     public:
         Emulator(std::string romName){

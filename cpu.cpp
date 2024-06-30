@@ -215,38 +215,86 @@ void CPU::ExecuteInstruction(uint16_t instruction){
 
             break;
         }
-        case 0xE000:
-
+        case 0xE000:{
+            uint8_t x = (instruction & 0x0F00) >> 8;
+            uint8_t key = V[x];
+            switch(instruction & 0x00FF){
+                case 0x009E:{
+                    if (memory->keys[key]){
+                        PC += 2;
+                    }
+                    break;
+                }
+                case 0x00A1:{
+                    if (!memory->keys[key]){
+                        PC += 2;
+                    }
+                    break;
+                }
+            }
             break;
-        case 0xF000:
+        }
+        case 0xF000:{
+            uint8_t x = (instruction & 0x0F00)>>8;
             switch(instruction & 0x00FF){
                 case 0x07:{
-                    uint8_t x = (instruction & 0x0F00)>>8;
                     V[x] = delayTimer;
                     break;
                 }
                 case 0x0A:{
+                    bool anyKeyPressed = false;
+                    for(int i = 0; i < 16; i++){
+                        if(memory->keys[i]){
+                            V[x] = i;
+                            anyKeyPressed = true;
+                        }
+                    }
+                    if(!anyKeyPressed){
+                        PC -= 2;
+                    }
                     break;
                 }
                 case 0x15:{
+                    delayTimer = V[x];
                     break;
                 }
                 case 0x18:{
+                    soundTimer = V[x];
                     break;
                 }
                 case 0x1E:{
+                    I += V[x];
                     break;
                 }
                 case 0x29:{
+                    int fontsStartInMemory = 0x0000;
+                    int fontSizeInBytes = 5;
+                    I = fontsStartInMemory + (fontSizeInBytes * V[x]);
                     break;
                 }
                 case 0x33:{
+                    uint8_t value = V[x];
+                    memory->ram[I + 2] = value % 10;
+                    value /= 10;
+
+                    memory->ram[I + 1] = value % 10;
+                    value /= 10;
+
+                    memory->ram[I + 0] = value % 10;
                     break;
                 }
                 case 0x55:{
+                    uint8_t amountOfRegistersToAdd = V[x]; // can be between 0 - 15, so the for loop contains <= instead of <.
+                    for(uint8_t i = 0; i <= amountOfRegistersToAdd; i++){
+                        memory->ram[I + i] = V[i];
+                    }
                     break;
                 }
                 case 0x65:{
+                    uint8_t amountOfRegistersToAdd = V[x]; // can be between 0 - 15, so the for loop contains <= instead of <.
+                    for(uint8_t i = 0; i <= amountOfRegistersToAdd; i++){
+                        V[i] = memory->ram[I + i];
+                    }
                     break;
                 }
 
@@ -254,6 +302,7 @@ void CPU::ExecuteInstruction(uint16_t instruction){
                     std::cout<<"Instruction not found"<<std::endl;
             }
             break;
+            }
         default:
         std::cout<<"Instruction not found"<<std::endl;
     }

@@ -11,7 +11,7 @@ class Display{
         Memory *memory;
         int width = screen_width;
         int height = screen_height;
-        int delayInMs = 16; // Pause execution for 16 ms / 60hz / 60fps, 16.67 is exact
+        int delayInMs = refreshRateInMs; // Pause execution for 16 ms / 60hz / 60fps, 16.67 is exact
         void initializeDisplay();
     public:
         Display(Memory* _memory):memory(_memory){

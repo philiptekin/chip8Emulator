@@ -9,11 +9,14 @@ class Memory{
     private:
         static const int maxMemorySize = 4*1024;
         static const int maxDisplaySize = screen_width*screen_height;
+        static const int maxKeys = 16;
         
         
     public:
         uint8_t ram[maxMemorySize];
         uint8_t display[maxDisplaySize];
+        bool keys[maxKeys]; // 1 2 3 4 Q W E R A S D F Z X C V
+        
         void Initialise(){
             for(int i = 0; i < maxMemorySize; i++){
                 ram[i] = 0;
