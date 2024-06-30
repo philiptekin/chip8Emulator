@@ -10,7 +10,7 @@ typedef enum{
 int const screen_width = 64;
 int const screen_height = 32;
 int const scaleFactor = 20;
-int const refreshRateInMs = 16; // 16.67 == 60 hz
-int const instructionsExecutedForEachFrame = 5; // 500 instructions/second is 8.33 instruction for each frame
+int const refreshRateInMs = 16; // 16.67 = 60 hz
+int const instructionsExecutedForEachFrame = 8; // 500 instructions/second is 8.33 instruction for each frame
 
 #endif

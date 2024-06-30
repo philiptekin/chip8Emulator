@@ -11,6 +11,7 @@ uint8_t randomByteGenerator(){
 
 
 void CPU::ExecuteInstruction(uint16_t instruction){
+    /*
     if(instruction == 0){
         std::cout << "No instruction found at PC: " << PC << std::endl;
     }
@@ -18,7 +19,7 @@ void CPU::ExecuteInstruction(uint16_t instruction){
         std::cout << "Executing instruction: " << std::hex << instruction << std::endl;
         std::cout << "PC value: " << std::hex << (PC) << std::endl;
     }
-
+    */
     
     switch(instruction & 0xF000){
         case 0x0000:{
@@ -211,8 +212,6 @@ void CPU::ExecuteInstruction(uint16_t instruction){
                     break;
                 }
             }
-
-
             break;
         }
         case 0xE000:{
@@ -237,42 +236,100 @@ void CPU::ExecuteInstruction(uint16_t instruction){
         case 0xF000:{
             uint8_t x = (instruction & 0x0F00)>>8;
             switch(instruction & 0x00FF){
-                case 0x07:{
+                case 0x0007:{
                     V[x] = delayTimer;
                     break;
                 }
-                case 0x0A:{
-                    bool anyKeyPressed = false;
-                    for(int i = 0; i < 16; i++){
-                        if(memory->keys[i]){
-                            V[x] = i;
-                            anyKeyPressed = true;
-                        }
+                case 0x000A:{
+                    if (memory->keys[0])
+                    {
+                        V[x] = 0;
                     }
-                    if(!anyKeyPressed){
+                    else if (memory->keys[1])
+                    {
+                        V[x] = 1;
+                    }
+                    else if (memory->keys[2])
+                    {
+                        V[x] = 2;
+                    }
+                    else if (memory->keys[3])
+                    {
+                        V[x] = 3;
+                    }
+                    else if (memory->keys[4])
+                    {
+                        V[x] = 4;
+                    }
+                    else if (memory->keys[5])
+                    {
+                        V[x] = 5;
+                    }
+                    else if (memory->keys[6])
+                    {
+                        V[x] = 6;
+                    }
+                    else if (memory->keys[7])
+                    {
+                        V[x] = 7;
+                    }
+                    else if (memory->keys[8])
+                    {
+                        V[x] = 8;
+                    }
+                    else if (memory->keys[9])
+                    {
+                        V[x] = 9;
+                    }
+                    else if (memory->keys[10])
+                    {
+                        V[x] = 10;
+                    }
+                    else if (memory->keys[11])
+                    {
+                        V[x] = 11;
+                    }
+                    else if (memory->keys[12])
+                    {
+                        V[x] = 12;
+                    }
+                    else if (memory->keys[13])
+                    {
+                        V[x] = 13;
+                    }
+                    else if (memory->keys[14])
+                    {
+                        V[x] = 14;
+                    }
+                    else if (memory->keys[15])
+                    {
+                        V[x] = 15;
+                    }
+                    else
+                    {
                         PC -= 2;
                     }
                     break;
                 }
-                case 0x15:{
+                case 0x0015:{
                     delayTimer = V[x];
                     break;
                 }
-                case 0x18:{
+                case 0x0018:{
                     soundTimer = V[x];
                     break;
                 }
-                case 0x1E:{
+                case 0x001E:{
                     I += V[x];
                     break;
                 }
-                case 0x29:{
+                case 0x0029:{
                     int fontsStartInMemory = 0x0000;
                     int fontSizeInBytes = 5;
                     I = fontsStartInMemory + (fontSizeInBytes * V[x]);
                     break;
                 }
-                case 0x33:{
+                case 0x0033:{
                     uint8_t value = V[x];
                     memory->ram[I + 2] = value % 10;
                     value /= 10;
@@ -281,17 +338,16 @@ void CPU::ExecuteInstruction(uint16_t instruction){
                     value /= 10;
 
                     memory->ram[I + 0] = value % 10;
-                    std::cout<< V[0] << V[1] << V[2]<<std::endl;
                     break;
                 }
-                case 0x55:{
+                case 0x0055:{
                     uint8_t amountOfRegistersToAdd = x; // can be between 0 - 15, so the for loop contains <= instead of <.
                     for(uint8_t i = 0; i <= amountOfRegistersToAdd; i++){
                         memory->ram[I + i] = V[i];
                     }
                     break;
                 }
-                case 0x65:{
+                case 0x0065:{
                     uint8_t amountOfRegistersToAdd = x; // can be between 0 - 15, so the for loop contains <= instead of <.
                     for(uint8_t i = 0; i <= amountOfRegistersToAdd; i++){
                         V[i] = memory->ram[I + i];

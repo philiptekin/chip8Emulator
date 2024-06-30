@@ -15,8 +15,8 @@ class Memory{
     public:
         uint8_t ram[maxMemorySize];
         uint8_t display[maxDisplaySize];
-        bool keys[maxKeys]; // 1 2 3 4 Q W E R A S D F Z X C V
-        
+        uint8_t keys[maxKeys]; // 1 2 3 4 Q W E R A S D F Z X C V
+
         void Initialise(){
             for(int i = 0; i < maxMemorySize; i++){
                 ram[i] = 0;
