@@ -281,17 +281,18 @@ void CPU::ExecuteInstruction(uint16_t instruction){
                     value /= 10;
 
                     memory->ram[I + 0] = value % 10;
+                    std::cout<< V[0] << V[1] << V[2]<<std::endl;
                     break;
                 }
                 case 0x55:{
-                    uint8_t amountOfRegistersToAdd = V[x]; // can be between 0 - 15, so the for loop contains <= instead of <.
+                    uint8_t amountOfRegistersToAdd = x; // can be between 0 - 15, so the for loop contains <= instead of <.
                     for(uint8_t i = 0; i <= amountOfRegistersToAdd; i++){
                         memory->ram[I + i] = V[i];
                     }
                     break;
                 }
                 case 0x65:{
-                    uint8_t amountOfRegistersToAdd = V[x]; // can be between 0 - 15, so the for loop contains <= instead of <.
+                    uint8_t amountOfRegistersToAdd = x; // can be between 0 - 15, so the for loop contains <= instead of <.
                     for(uint8_t i = 0; i <= amountOfRegistersToAdd; i++){
                         V[i] = memory->ram[I + i];
                     }
@@ -307,6 +308,12 @@ void CPU::ExecuteInstruction(uint16_t instruction){
         std::cout<<"Instruction not found"<<std::endl;
     }
     PC += 2;
+    if(delayTimer > 0){
+        delayTimer--;
+    }
+    if(soundTimer > 0){
+        soundTimer--;
+    }
     
 
 }

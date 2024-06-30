@@ -15,11 +15,13 @@ void Emulator::runEmulatorForCycles(int cycles){
 }
 void Emulator::startEmulator(){
     while(state != QUIT){
-        display.renderScreen();
         inputHandler.checkUserInput(state);
         if(state==PAUSED){
             continue;
         }
         runEmulatorForCycles(1);
+        display.renderScreen();
+
+        
     }
 }
